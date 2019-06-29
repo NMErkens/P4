@@ -3,7 +3,7 @@ const database = require('../datalayer/mssql.dao')
 
 module.exports = {
     getAllReservations: (req, res, next) => {
-        logger.info('Get /api/reservations aangeroepen.')
+        logger.info('Get /api/reservations aangeroepen.git')
     
         const query = 'SELECT * FROM Reservation;'
         database.executeQuery(query, (err, rows) => {
