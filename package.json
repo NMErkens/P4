@@ -1,0 +1,25 @@
+{
+  "name": "nickerkensp4",
+  "version": "1.0.0",
+  "description": "EindopdrachtP4",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js",
+    "test": "node node_modules/mocha/bin/_mocha ./test/*test.js --reporter spec --exit"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "nodemon": "^1.18.11"
+  },
+  "author": "Nick Erkens",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "i": "^0.3.6",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.22.1",
+    "mssql": "^5.1.0",
+    "tracer": "^0.9.8"
+  }
+}
