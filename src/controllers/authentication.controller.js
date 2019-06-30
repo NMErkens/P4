@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const secretKey = require('../config/appconfig').secretKey
 
 module.exports = {
+  
   register: (req, res, next) => {
     logger.info('register aangeroepen')
 
@@ -21,43 +22,40 @@ module.exports = {
       `'${user.StreetAddress}', '${user.PostalCode}', '${user.City}', ` +
       `'${user.DateOfBirth}', '${user.PhoneNumber}', '${user.EmailAddress}', ` +
       `'${user.Password}'); SELECT SCOPE_IDENTITY() AS UserId`
-console.log(query);
- 
 
-    // Query aanroepen op de database
-    database.executeQuery(query, (err, rows) => {
-      if (err) {
-        const errorObject = {
-          message: 'Er ging iets mis in de database.',
-          sql: {
-            message: err.message,
-            code: err.code
-          },
-          code: 500
+      
+        var zipCodePattern = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
+        //var phoneNumberPattern = ^\(?([+]31|0031|0)-?6(\s?|-)([0-9]\s{0,3}){8}$;
+        var postalcode = user.PostalCode;
+        //var phoneNUmber = user.PhoneNumber;
+
+    // Query aanroepen op de database 
+      database.executeQuery(query, (err, rows) => {
+        if (err) {
+          const errorObject = {
+            message: 'Er ging iets mis in de database.',
+            sql: {
+              message: err.message,
+              code: err.code
+            },
+            code: 500
+          }
+          
+          next(errorObject)
         }
-        
-        next(errorObject)
-      }
-      if (rows) {
-        /*
-        const payload = {
-          email: user.EmailAddress,
-          UserId: rows.recordset[0].UserId
+        if(zipCodePattern.test(postalcode) == false/* || phoneNumberPattern.test(phoneNUmber) == false*/){
+          const msg = "invalid Postalcode (must be dutch)";
+          logger.trace(msg)
+          const errorObject = {
+            message: msg,
+            code: 406
+          }
+          next(errorObject)
         }
-        const userInfo = {
-          token: auth.encodeToken(payload),
-          //email: user.EmailAddress,
-          id: rows.recordset[0].UserId
-        }*/
-        console.log("USERINFO>>>>>>>>>", rows.recordset[0])
-        // User geregistreerd, retourneer het UserId
-        res.status(200).json({ result: rows.recordset[0] })
-
-        // User geregistreerd, retourneer het UserId
-        //res.status(200).json({ result: rows.recordset[0] })
-
-      }
-    })
+        else if (rows) {
+            res.status(200).json({ result: rows.recordset[0] })  
+        }
+      })  
   },
 
   login: (req, res, next) => {

@@ -1,5 +1,5 @@
 {
-  "name": "nickerkensp4",
+  "name": "P4",
   "version": "1.0.0",
   "description": "EindopdrachtP4",
   "main": "main.js",
@@ -15,6 +15,8 @@
   "author": "Nick Erkens",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "express": "^4.16.4",
     "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",

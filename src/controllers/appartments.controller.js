@@ -81,7 +81,21 @@ module.exports = {
         next(errorObject)
       }
       if (rows) {
-        res.status(200).json({ result: rows.recordset })
+        if (rows.rowsAffected[0] === 0) {
+          // query ging goed, maar geen film met de gegeven ID's.
+          // -> retourneer een error!
+          const msg = 'Apartment not found or you have no access!'
+          logger.trace(msg)
+          const errorObject = {
+            message: msg,
+            code: 404
+          }
+          res.status(404).json({ errorObject })
+        }
+        else{
+          res.status(200).json({ result: rows.recordset })
+        }
+        
       }
     })
   },
@@ -112,11 +126,14 @@ module.exports = {
             message: msg,
             code: 401
           }
+          res.status(401).json({ errorObject })
           // Let hier op de 'return' - anders gaat Node gewoon verder.
           // return next(errorObject)
+        }else{
+          res.status(200).json({ result: rows })
+          logger.info("succesvol verwijdert")
         }
-        res.status(200).json({ result: rows })
-        logger.info("succesvol verwijdert")
+        
       }
     })
   },
@@ -148,7 +165,20 @@ module.exports = {
         next(errorObject)
       }
       if (rows) {
-        res.status(200).json({ rows })
+        if (rows.rowsAffected[0] === 0) {
+          // query ging goed, maar geen film met de gegeven ID's.
+          // -> retourneer een error!
+          const msg = 'Apartment not found or you have no access!'
+          logger.trace(msg)
+          const errorObject = {
+            message: msg,
+            code: 401
+          }
+          res.status(401).json({ errorObject })
+        }else{
+            res.status(200).json({ rows })
+        }
+        
       }
     })
   },
