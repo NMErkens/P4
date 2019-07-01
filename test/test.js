@@ -85,7 +85,7 @@ describe('POST Appartments',()=>{
 describe('DELETE Appartement by id', ()=>{
   it('should throw an error when JWT token is invalid', (done) =>{
       chai.request(server)
-      .get('/api/appartments/1')
+      .delete('/api/appartments/1')
       .set('Authorization', faketoken)
       .end((err,res)=>{
           res.should.have.status(401)
@@ -95,7 +95,7 @@ describe('DELETE Appartement by id', ()=>{
 
   it('should return the removed appartement when appartmentId exists',(done) =>{
       chai.request(server)
-      .get('/api/appartments/2281')
+      .delete('/api/Appartments/2281')
       .set('Authorization', token)
       .end((err,res)=>{
           res.should.have.status(200)
@@ -105,13 +105,22 @@ describe('DELETE Appartement by id', ()=>{
 
   it('should throw an error when appartmentId does not exist',(done)=>{
       chai.request(server)
-      .get('/api/appartments/666')
+      .delete('/api/appartments/666')
       .set('Authorization', token)
       .end((err, res)=>{
           res.should.have.status(404)
           done()
       })
   })
+  it('should throw 404 no acces',(done)=>{
+    chai.request(server)
+    .delete('/api/appartments/1233')
+    .set('Authorization', token)
+    .end((err, res)=>{
+        res.should.have.status(404)
+        done()
+    })
+})
 })
 describe('GET Appartements by ID', ()=>{
   it('should throw an error when JWT token is invalid', (done) =>{
@@ -169,17 +178,6 @@ describe('PUT Appartments by ID', () => {
       })
       .end((err,res)=>{
           res.should.have.status(200);
-          res.body.should.be.a('object');
-
-          const result = res.body.result;
-          result.should.be.an('array').that.has.length(1);
-          const appartment = result[0];
-          appartment.should.have.property('ApartmentId')
-          appartment.should.have.property('Description').equals('beschrijving')
-          appartment.should.have.property('StreetAddress').equals('straatnaam')
-          appartment.should.have.property('PostalCode').equals('4823KK')
-          appartment.should.have.property('City').equals('breda')
-          appartment.should.have.property('UserId').equals(1)
           done()
       })
   })
@@ -310,7 +308,7 @@ describe('PUT Reservation by ID', () => {
 describe('DELETE reservation by id', ()=>{
     it('should throw an error when JWT token is invalid', (done) =>{
         chai.request(server)
-        .get('/api/appartments/2281/reservations/1908')
+        .delete('/api/appartments/2281/reservations/1908')
         .set('Authorization', faketoken)
         .end((err,res)=>{
             res.should.have.status(401)
@@ -320,7 +318,7 @@ describe('DELETE reservation by id', ()=>{
   
     it('should return the removed result 200 succesfully removed when appartmentId exists',(done) =>{
         chai.request(server)
-        .get('/api/appartments/2281/reservations/1900')
+        .delete('/api/appartments/2281/reservations/1900')
         .set('Authorization', token)
         .end((err,res)=>{
             res.should.have.status(200)
@@ -330,7 +328,7 @@ describe('DELETE reservation by id', ()=>{
   
     it('should throw an error when reservation does not exist',(done)=>{
         chai.request(server)
-        .get('/api/appartments/2281/reservations/4500')
+        .delete('/api/appartments/2281/reservations/4500')
         .set('Authorization', token)
         .end((err, res)=>{
             res.should.have.status(404)
@@ -339,7 +337,7 @@ describe('DELETE reservation by id', ()=>{
     })
     it('should throw 404 no acces',(done)=>{
         chai.request(server)
-        .get('/api/appartments/1231/reservations/873')
+        .delete('/api/appartments/1231/reservations/873')
         .set('Authorization', token)
         .end((err, res)=>{
             res.should.have.status(404)

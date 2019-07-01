@@ -124,9 +124,9 @@ module.exports = {
           logger.trace(msg)
           const errorObject = {
             message: msg,
-            code: 401
+            code: 404
           }
-          res.status(401).json({ errorObject })
+          res.status(404).json({ errorObject })
           // Let hier op de 'return' - anders gaat Node gewoon verder.
           // return next(errorObject)
         }else{
@@ -345,7 +345,7 @@ module.exports = {
           // Let hier op de 'return' - anders gaat Node gewoon verder.
           // return next(errorObject)
         }
-        else{
+        else if(rows){
           res.status(200).json({ result: rows + " succesvol verwijdert"})
           logger.info("succesvol verwijdert")
         }
