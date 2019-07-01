@@ -1,5 +1,6 @@
 const logger = require('../config/appconfig').logger
 const database = require('../datalayer/mssql.dao')
+const assert = require('assert')
 const jwt = require('jsonwebtoken')
 //const auth = require('../utility/authentication/authentication')
 const secretKey = require('../config/appconfig').secretKey
@@ -25,10 +26,24 @@ module.exports = {
 
       
         var zipCodePattern = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
-        //var phoneNumberPattern = ^\(?([+]31|0031|0)-?6(\s?|-)([0-9]\s{0,3}){8}$;
-        var postalcode = user.PostalCode;
-        //var phoneNUmber = user.PhoneNumber;
+        var phoneNumberPattern = RegExp('(?=^.{10,11}$)0\d*-?\d*');
 
+        var postalcode = user.PostalCode;
+        var phoneNUmber = user.PhoneNumber;
+
+        try {
+          // Add validators to certain fields
+          assert(zipCodePattern.test(postalcode), 'postal code invalid.');
+          assert(phoneNumberPattern.test(phoneNUmber), 'phonenumber invalid.');
+          
+
+        } catch (ex) {
+          const errorObject = {
+            message: 'Validation fails: ' + ex.toString(),
+            code: 500
+          }
+          return next(errorObject)
+        }
     // Query aanroepen op de database 
       database.executeQuery(query, (err, rows) => {
         if (err) {
@@ -40,19 +55,23 @@ module.exports = {
             },
             code: 500
           }
-          
           next(errorObject)
-        }
-        if(zipCodePattern.test(postalcode) == false/* || phoneNumberPattern.test(phoneNUmber) == false*/){
-          const msg = "invalid Postalcode (must be dutch)";
+        }/*
+        if(zipCodePattern.test(postalcode) == false || phoneNumberPattern.test(phoneNUmber) == false){
+          const msg = "invalid Postalcode (must be dutch) or phonenumber";
           logger.trace(msg)
           const errorObject = {
             message: msg,
             code: 406
           }
+          logger.info(rows.recordset[0].UserId);
+          //var id = rows.recordset[0].UserId;
+          //const query2= `DELETE FROM DBUser WHERE ApartmentId=${id}`
+          //database.executeQuery(query2);
+          //res.status(401).json(errorObject)
           next(errorObject)
-        }
-        else if (rows) {
+        }*/
+        if (rows) {
             res.status(200).json({ result: rows.recordset[0] })  
         }
       })  
