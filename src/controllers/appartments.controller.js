@@ -84,7 +84,7 @@ module.exports = {
         if (rows.rowsAffected[0] === 0) {
           // query ging goed, maar geen film met de gegeven ID's.
           // -> retourneer een error!
-          const msg = 'Apartment not found or you have no access!'
+          const msg = 'Apartment not found'
           logger.trace(msg)
           const errorObject = {
             message: msg,
@@ -172,7 +172,7 @@ module.exports = {
           logger.trace(msg)
           const errorObject = {
             message: msg,
-            code: 401
+            code: 404
           }
           res.status(401).json({ errorObject })
         }else{
@@ -202,7 +202,18 @@ module.exports = {
         next(errorObject)
       }
       if (rows) {
-        res.status(200).json({ result: rows.recordset })
+        if (rows.rowsAffected[0] === 0){
+          const msg = 'reservation not found'
+          logger.trace(msg)
+          const errorObject = {
+            message: msg,
+            code: 404
+          }
+          res.status(404).json({ msg })
+        }else{
+          res.status(200).json({ result: rows.recordset })
+        }
+        
       }
     })
   },
@@ -220,7 +231,7 @@ module.exports = {
     `INSERT INTO [Reservation] (ApartmentId, StartDate, ` +
     `EndDate, Status, UserId) ` +
     ` VALUES('${id}', '${Reservation.StartDate}', ` +
-    `'${Reservation.EndDate}', '${Reservation.Status}', '${userId}' );`
+    `'${Reservation.EndDate}', '${Reservation.Status}', '${userId}');`
     
       console.log(query);
     database.executeQuery(query, (err, rows) => {
@@ -233,7 +244,7 @@ module.exports = {
         next(errorObject)
       }
       if (rows) {
-        res.status(200).json({ result: rows.recordset + " succesvol toegevoegd" })
+          res.status(200).json({ result: rows.recordset + " succesvol toegevoegd" })
       }
     })
   },
@@ -279,7 +290,7 @@ module.exports = {
       // verwerk error of result
       if (err) {
         const errorObject = {
-          message: 'Er ging iets mis in de database___.',
+          message: 'Er ging iets mis in de database.',
           code: 500
         }
         next(errorObject)
@@ -295,7 +306,7 @@ module.exports = {
           res.status(401).json({ msg })
         }
         else{
-          res.status(200).json({ result: rows.recordset })
+          res.status(200).json({ result: rows.recordset + " Rows succesfully updated" })
         }
         
       }
@@ -328,9 +339,9 @@ module.exports = {
           logger.trace(msg)
           const errorObject = {
             message: msg,
-            code: 401
+            code: 404
           }
-          res.status(401).json({ msg})
+          res.status(404).json({ msg})
           // Let hier op de 'return' - anders gaat Node gewoon verder.
           // return next(errorObject)
         }
