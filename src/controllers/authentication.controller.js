@@ -27,15 +27,16 @@ module.exports = {
       
         var zipCodePattern = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
         var phoneNumberPattern = RegExp('(?=^.{10,11}$)0\d*-?\d*');
-
+        var emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
         var postalcode = user.PostalCode;
         var phoneNUmber = user.PhoneNumber;
+        var email = user.EmailAddress;
 
         try {
           // Add validators to certain fields
           assert(zipCodePattern.test(postalcode), 'postal code invalid. (must be dutch)');
           assert(phoneNumberPattern.test(phoneNUmber), 'phonenumber invalid.');
-          
+          assert(emailPattern.test(email), 'email invalid.');
 
         } catch (ex) {
           const errorObject = {
