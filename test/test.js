@@ -304,7 +304,7 @@ describe('PUT Reservation by ID', () => {
         })
     })
 })
-/*
+/* even uitgezet anders verwijdert het met elke test en dan falen andere testen
 describe('DELETE reservation by id', ()=>{
     it('should throw an error when JWT token is invalid', (done) =>{
         chai.request(server)
