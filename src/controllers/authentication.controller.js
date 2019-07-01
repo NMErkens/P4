@@ -33,7 +33,7 @@ module.exports = {
 
         try {
           // Add validators to certain fields
-          assert(zipCodePattern.test(postalcode), 'postal code invalid.');
+          assert(zipCodePattern.test(postalcode), 'postal code invalid. (must be dutch)');
           assert(phoneNumberPattern.test(phoneNUmber), 'phonenumber invalid.');
           
 
