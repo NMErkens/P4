@@ -9,7 +9,7 @@
     "test": "node node_modules/mocha/bin/_mocha ./test/*test.js --reporter spec --exit"
   },
   "devDependencies": {
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "nodemon": "^1.18.11"
   },
   "author": "Nick Erkens",
